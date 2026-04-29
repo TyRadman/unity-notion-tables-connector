@@ -19,7 +19,7 @@ public sealed class TNotionSyncWindow : EditorWindow
     private Vector2 _dbSelectScroll;
     private string _dbSearch = "";
 
-    private const string DEFAULT_API = "PASTE_YOUR_NOTION_API_TOKEN_HERE";
+    private const string DEFAULT_API = "API_GOES_HERE";
     private const string TitleColumnName = "Name";
     private const string PATH_TO_ICON = "NotionSyncer/T_Icon_Notion";
     private const string ICON_WARNING_DONT_SHOW_AGAIN_PREF_KEY = "NotionSyncer_DontShowAgain";

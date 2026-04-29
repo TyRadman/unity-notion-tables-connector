@@ -1,0 +1,17 @@
+{
+  "name": "com.tyradman.notion-sync",
+  "version": "0.9.9",
+  "displayName": "Notion Tables Connector",
+  "description": "Connects Unity ScriptableObject data to Notion tables. Push and pull field values between your project and Notion databases.",
+  "unity": "2021.3",
+  "license": "MIT",
+  "author": {
+    "name": "Ty"
+  },
+  "keywords": [
+    "notion",
+    "scriptableobject",
+    "sync",
+    "database"
+  ]
+}
