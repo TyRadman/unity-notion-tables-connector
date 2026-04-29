@@ -19,10 +19,11 @@ public sealed class TNotionSyncWindow : EditorWindow
     private Vector2 _dbSelectScroll;
     private string _dbSearch = "";
 
-    private const string DEFAULT_API = "API_GOES_HERE";
     private const string TitleColumnName = "Name";
     private const string PATH_TO_ICON = "NotionSyncer/T_Icon_Notion";
     private const string ICON_WARNING_DONT_SHOW_AGAIN_PREF_KEY = "NotionSyncer_DontShowAgain";
+
+    private string _settingsApiTokenCache = "";
 
 
     [MenuItem("Tools/Notion Syncer")]
@@ -107,6 +108,8 @@ public sealed class TNotionSyncWindow : EditorWindow
 
     private void OnGUI()
     {
+        DrawSettingsBlock();
+
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("Refresh Databases", GUILayout.Height(28))) RefreshDatabases();
         if (GUILayout.Button("Push", GUILayout.Height(28))) Push(null);
@@ -162,6 +165,41 @@ public sealed class TNotionSyncWindow : EditorWindow
         GUILayout.Space(6);
     }
 
+    private void DrawSettingsBlock()
+    {
+        EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+
+        GUILayout.Label("API Settings", EditorStyles.boldLabel);
+        
+        bool hasToken = TNotionSettingsManager.HasApiToken();
+        GUI.contentColor = hasToken ? Color.green : Color.yellow;
+        GUILayout.Label(hasToken ? "API Token Configured (Encrypted in UserSettings)" : "No API Token Configured");
+        GUI.contentColor = Color.white;
+
+        GUILayout.BeginHorizontal();
+        _settingsApiTokenCache = EditorGUILayout.PasswordField("Notion API Token", _settingsApiTokenCache);
+        if (GUILayout.Button("Save Token", GUILayout.Width(100)))
+        {
+            if (!string.IsNullOrEmpty(_settingsApiTokenCache))
+            {
+                TNotionSettingsManager.SetApiToken(_settingsApiTokenCache.Trim());
+                _settingsApiTokenCache = "";
+                RefreshDatabases();
+                GUI.FocusControl(null); // Remove focus to clear password field visual
+            }
+        }
+        if (GUILayout.Button("Clear", GUILayout.Width(60)))
+        {
+            TNotionSettingsManager.ClearApiToken();
+            _settingsApiTokenCache = "";
+            RefreshDatabases();
+        }
+        GUILayout.EndHorizontal();
+
+        EditorGUILayout.EndVertical();
+        GUILayout.Space(6);
+    }
+
     private void OnEnable()
     {
         RefreshDatabases();
@@ -177,7 +215,7 @@ public sealed class TNotionSyncWindow : EditorWindow
         for (int i = 0; i < dbs.Count; i++)
         {
             var db = dbs[i];
-            string apiKey = string.IsNullOrEmpty(db.ApiKey) ? DEFAULT_API : db.ApiKey;
+            string apiKey = string.IsNullOrEmpty(db.ApiKey) ? TNotionSettingsManager.GetApiToken() : db.ApiKey;
 
             string typeDbId = null;
             if (db.TryResolveDatabaseId(out string idFromAttr, out _))
