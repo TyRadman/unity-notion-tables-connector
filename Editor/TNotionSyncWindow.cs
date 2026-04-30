@@ -508,7 +508,7 @@ public sealed class TNotionSyncWindow : EditorWindow
                 for (int a = 0; a < groupAssets.Count; a++)
                 {
                     var asset = groupAssets[a];
-                    string entryKey = $"{asset.name}_{asset.GetInstanceID()}";
+                    string entryKey = asset.name;
 
                     var payload = new Dictionary<string, object>(db.Properties.Count);
 
@@ -516,8 +516,19 @@ public sealed class TNotionSyncWindow : EditorWindow
                     {
                         var prop = db.Properties[pi];
 
-                        if (!schema.Properties.ContainsKey(prop.NotionName))
+                        if (!schema.Properties.TryGetValue(prop.NotionName, out string notionColType))
                             continue;
+
+                        // Title is the page key written separately; skip it as a regular property
+                        if (notionColType == "title")
+                            continue;
+
+                        string expectedColType = GetExpectedNotionType(prop.FieldType);
+                        if (expectedColType != null && expectedColType != notionColType)
+                        {
+                            Log($"[Warn] '{prop.NotionName}' skipped — C# {prop.FieldType.Name} maps to '{expectedColType}' but Notion column is '{notionColType}'");
+                            continue;
+                        }
 
                         if (!prop.TryGet(asset, out object val))
                             continue;
@@ -614,7 +625,7 @@ public sealed class TNotionSyncWindow : EditorWindow
                 for (int i = 0; i < groupAssets.Count; i++)
                 {
                     var a = groupAssets[i];
-                    assetsByKey[$"{a.name}_{a.GetInstanceID()}"] = a;
+                    assetsByKey[a.name] = a;
                 }
 
                 var schema = TNotionApiClient.GetDatabaseSchema(databaseId, db.ApiKey, db.DisplayName);
@@ -679,9 +690,17 @@ public sealed class TNotionSyncWindow : EditorWindow
         }
     }
 
+    private static string GetExpectedNotionType(Type t)
+    {
+        if (t == typeof(bool))   return "checkbox";
+        if (t == typeof(string)) return "rich_text";
+        if (t == typeof(int) || t == typeof(long) || t == typeof(float) || t == typeof(double)) return "number";
+        return null;
+    }
+
     private void Log(string line)
     {
-        _log.AppendLine(line);
+        _log.AppendLine($"[{DateTime.Now:HH:mm:ss}] {line}");
         Repaint();
     }
 
