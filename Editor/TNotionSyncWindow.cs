@@ -431,6 +431,8 @@ public sealed class TNotionSyncWindow : EditorWindow
 
         foreach (var db in dbs)
         {
+            string apiKey = string.IsNullOrEmpty(db.ApiKey) ? TNotionSettingsManager.GetApiToken() : db.ApiKey;
+
             string typeDatabaseId = null;
             if (db.TryResolveDatabaseId(out string idFromAttr, out _))
                 typeDatabaseId = TNotionUnityReflectionHelper.NormalizeDbId(idFromAttr);
@@ -481,7 +483,7 @@ public sealed class TNotionSyncWindow : EditorWindow
                 string databaseId = kv.Key;
                 List<ScriptableObject> groupAssets = kv.Value;
 
-                var schema = TNotionApiClient.GetDatabaseSchema(databaseId, db.ApiKey, db.DisplayName);
+                var schema = TNotionApiClient.GetDatabaseSchema(databaseId, apiKey, db.DisplayName);
                 if (schema == null)
                     continue;
 
@@ -491,7 +493,7 @@ public sealed class TNotionSyncWindow : EditorWindow
                     continue;
                 }
 
-                var pages = TNotionApiClient.QueryAllPages(databaseId, db.ApiKey, db.DisplayName);
+                var pages = TNotionApiClient.QueryAllPages(databaseId, apiKey, db.DisplayName);
                 if (pages == null)
                     continue;
 
@@ -541,14 +543,14 @@ public sealed class TNotionSyncWindow : EditorWindow
 
                     if (existing.TryGetValue(entryKey, out string pageId))
                     {
-                        if (TNotionApiClient.UpdatePage(pageId, db.ApiKey, payload, out string err))
+                        if (TNotionApiClient.UpdatePage(pageId, apiKey, payload, out string err))
                             Log($"[Update] {entryKey}");
                         else
                             Log($"[Error] Update failed {entryKey} | {err}");
                     }
                     else
                     {
-                        if (TNotionApiClient.CreatePage(databaseId, db.ApiKey, entryKey, payload, out string err))
+                        if (TNotionApiClient.CreatePage(databaseId, apiKey, entryKey, payload, out string err))
                             Log($"[Create] {entryKey}");
                         else
                             Log($"[Error] Create failed {entryKey} | {err}");
@@ -571,6 +573,8 @@ public sealed class TNotionSyncWindow : EditorWindow
 
         foreach (var db in dbs)
         {
+            string apiKey = string.IsNullOrEmpty(db.ApiKey) ? TNotionSettingsManager.GetApiToken() : db.ApiKey;
+
             string typeDatabaseId = null;
             if (db.TryResolveDatabaseId(out string idFromAttr, out _))
                 typeDatabaseId = TNotionUnityReflectionHelper.NormalizeDbId(idFromAttr);
@@ -628,7 +632,7 @@ public sealed class TNotionSyncWindow : EditorWindow
                     assetsByKey[a.name] = a;
                 }
 
-                var schema = TNotionApiClient.GetDatabaseSchema(databaseId, db.ApiKey, db.DisplayName);
+                var schema = TNotionApiClient.GetDatabaseSchema(databaseId, apiKey, db.DisplayName);
                 if (schema == null)
                     continue;
 
@@ -638,7 +642,7 @@ public sealed class TNotionSyncWindow : EditorWindow
                     continue;
                 }
 
-                var pages = TNotionApiClient.QueryAllPages(databaseId, db.ApiKey, db.DisplayName);
+                var pages = TNotionApiClient.QueryAllPages(databaseId, apiKey, db.DisplayName);
                 if (pages == null)
                     continue;
 
