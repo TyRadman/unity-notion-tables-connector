@@ -72,7 +72,7 @@ If different assets of the same type should sync to different Notion databases, 
 [TNotionDatabase]
 public class Item : ScriptableObject, ITNotionSyncUniqueTable
 {
-    public string TableID { get; set; } = "your-32-char-database-id";
+    [field: SerializeField] public string TableID { get; set; } = "your-32-char-database-id";
 }
 ```
 
