@@ -17,7 +17,7 @@ Or clone and drop into `Packages/`.
 
 ### 1. Configure the API token
 
-Open **Tools → Notion Syncer**, paste your [Notion integration token](https://www.notion.so/my-integrations) into the **Notion API Token** field, and click **Save Token**. The token is AES-256 encrypted and stored locally — never in source control.
+Open **Tools → Notion Syncer**, paste your [Notion integration token](https://www.notion.so/my-integrations) into the **Notion API Token** field, and click **Save Token**. The token is AES-256 encrypted and stored locally, never in source control.
 
 ### 2. Share your database with the integration
 
@@ -51,14 +51,14 @@ public class Item : ScriptableObject
 | `int / long / float / double` | Number |
 | `bool` | Checkbox |
 
-The **Name** column (title) in Notion is used as the page key and maps to `asset.name` — do not tag a field with `[TNotionProperty("Name")]` unless it is actually the title column.
+The **Name** column (title) in Notion is used as the page key and maps to `asset.name`. Do not tag a field with `[TNotionProperty("Name")]` unless it is actually the title column.
 
 ### 5. Push / Pull
 
 Open **Tools → Notion Syncer**, select the databases you want to sync, then click **Push** or **Pull**.
 
-- **Push** — creates a new page for each asset that has no matching row, or updates an existing one.
-- **Pull** — reads Notion values into the matching assets and saves them.
+- **Push**: creates a new page for each asset that has no matching row, or updates an existing one.
+- **Pull**: reads Notion values into the matching assets and saves them.
 
 Pages are matched by the asset's filename (without extension).
 
@@ -84,4 +84,4 @@ Unity **2021.3** or newer.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT ([LICENSE](LICENSE) for details)
