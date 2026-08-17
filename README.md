@@ -4,7 +4,7 @@ Syncs Unity ScriptableObject fields with Notion database columns via Push/Pull.
 
 ## Installation
 
-**Package Manager → + → Add package from git URL:**
+**Package Manager -> + -> Add package from git URL:**
 ```
 https://github.com/TyRadman/unity-notion-tables-connector.git
 ```
@@ -21,7 +21,7 @@ Open **Tools → Notion Syncer**, paste your [Notion integration token](https://
 
 ### 2. Share your database with the integration
 
-In Notion, open your database → **···** menu → **Connect to** → select your integration.
+In Notion, open your database -> **···** menu -> **Connect to** -> select your integration.
 
 ### 3. Get your database ID
 
@@ -84,4 +84,4 @@ Unity **2021.3** or newer.
 
 ## License
 
-MIT ([LICENSE](LICENSE) for details)
+([MIT](LICENSE))
